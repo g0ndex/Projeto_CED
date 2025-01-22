@@ -1,0 +1,9 @@
+# Ignorar binários
+*.o
+*.out
+*.exe
+./build/
+
+# Arquivos temporários
+*~
+*.swp
