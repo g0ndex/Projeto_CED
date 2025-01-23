@@ -1,129 +1,70 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <cuda_runtime.h>
-#include <math.h>
 
-// Dimensões da matriz
-#define LARGURA 5
-#define ALTURA 5
+__global__ void kernelCanny(double *matriz, int dim) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int idy = blockIdx.y * blockDim.y + threadIdx.y;
 
-// Kernel para calcular os gradientes e direções
-__global__ void calcular_gradientes(double *input, double *gradiente, double *direcao, int largura, int altura) {
-    int i = blockIdx.y * blockDim.y + threadIdx.y;
-    int j = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (i > 0 && j > 0 && i < altura - 1 && j < largura - 1) {
-        double gx = input[(i - 1) * largura + (j + 1)] - input[(i - 1) * largura + (j - 1)] +
-                    2 * input[i * largura + (j + 1)] - 2 * input[i * largura + (j - 1)] +
-                    input[(i + 1) * largura + (j + 1)] - input[(i + 1) * largura + (j - 1)];
-        double gy = input[(i - 1) * largura + (j - 1)] + 2 * input[(i - 1) * largura + j] +
-                    input[(i - 1) * largura + (j + 1)] - input[(i + 1) * largura + (j - 1)] -
-                    2 * input[(i + 1) * largura + j] - input[(i + 1) * largura + (j + 1)];
-
-        gradiente[i * largura + j] = sqrt(gx * gx + gy * gy);
-        direcao[i * largura + j] = atan2(gy, gx) * 180 / M_PI;
+    if (idx < dim && idy < dim) {
+        int index = idy * dim + idx;
+        matriz[index] += 1.0;  // Simulação de cálculo
     }
 }
 
-// Kernel para aplicar supressão não máxima
-__global__ void supressao_nao_maxima(double *gradiente, double *direcao, double *output, int largura, int altura) {
-    int i = blockIdx.y * blockDim.y + threadIdx.y;
-    int j = blockIdx.x * blockDim.x + threadIdx.x;
+void executarCannyGPU(int dim) {
+    printf("Executando Canny GPU com matriz de dimensão %dx%d...\n", dim, dim);
 
-    if (i > 0 && j > 0 && i < altura - 1 && j < largura - 1) {
-        double angulo = direcao[i * largura + j];
-        angulo = (angulo < 0) ? angulo + 180 : angulo;
-
-        double q = 0, r = 0;
-        if ((angulo >= 0 && angulo < 22.5) || (angulo >= 157.5 && angulo <= 180)) {
-            q = gradiente[i * largura + (j + 1)];
-            r = gradiente[i * largura + (j - 1)];
-        } else if (angulo >= 22.5 && angulo < 67.5) {
-            q = gradiente[(i + 1) * largura + (j - 1)];
-            r = gradiente[(i - 1) * largura + (j + 1)];
-        } else if (angulo >= 67.5 && angulo < 112.5) {
-            q = gradiente[(i + 1) * largura + j];
-            r = gradiente[(i - 1) * largura + j];
-        } else if (angulo >= 112.5 && angulo < 157.5) {
-            q = gradiente[(i - 1) * largura + (j - 1)];
-            r = gradiente[(i + 1) * largura + (j + 1)];
-        }
-
-        output[i * largura + j] = (gradiente[i * largura + j] >= q && gradiente[i * largura + j] >= r) ? gradiente[i * largura + j] : 0;
+    double *host_matriz = (double *)malloc(dim * dim * sizeof(double));
+    for (int i = 0; i < dim * dim; i++) {
+        host_matriz[i] = (double)i;
     }
+
+    double *device_matriz;
+    cudaMalloc(&device_matriz, dim * dim * sizeof(double));
+    cudaMemcpy(device_matriz, host_matriz, dim * dim * sizeof(double), cudaMemcpyHostToDevice);
+
+    dim3 threadsPerBlock(16, 16);
+    dim3 blocksPerGrid((dim + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                       (dim + threadsPerBlock.y - 1) / threadsPerBlock.y);
+
+    kernelCanny<<<blocksPerGrid, threadsPerBlock>>>(device_matriz, dim);
+    cudaDeviceSynchronize();
+
+    cudaMemcpy(host_matriz, device_matriz, dim * dim * sizeof(double), cudaMemcpyDeviceToHost);
+
+    cudaFree(device_matriz);
+    free(host_matriz);
 }
 
-// Kernel para aplicar thresholds
-__global__ void aplicar_thresholds(double *input, double *output, double low, double high, int largura, int altura) {
-    int i = blockIdx.y * blockDim.y + threadIdx.y;
-    int j = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (i > 0 && j > 0 && i < altura - 1 && j < largura - 1) {
-        if (input[i * largura + j] >= high) {
-            output[i * largura + j] = 255;
-        } else if (input[i * largura + j] >= low) {
-            output[i * largura + j] = 128;
-        } else {
-            output[i * largura + j] = 0;
-        }
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Uso: %s <dimensao_da_matriz>\n", argv[0]);
+        return 1;
     }
-}
 
-// Função para imprimir a matriz
-void imprimir_matriz(double *matriz, int largura, int altura) {
-    for (int i = 0; i < altura; i++) {
-        for (int j = 0; j < largura; j++) {
-            printf("%.2f ", matriz[i * largura + j]);
-        }
-        printf("\n");
+    int dim = atoi(argv[1]);
+    if (dim <= 0) {
+        printf("Dimensão inválida. Deve ser um número inteiro positivo.\n");
+        return 1;
     }
-}
 
-int main() {
-    // Inicialização de variáveis
-    double h_input[LARGURA * ALTURA] = {
-        0, 50, 100, 150, 200,
-        50, 100, 150, 200, 250,
-        100, 150, 200, 250, 300,
-        150, 200, 250, 300, 350,
-        200, 250, 300, 350, 400
-    };
-    double *d_input, *d_gradiente, *d_direcao, *d_output;
-    double h_output[LARGURA * ALTURA];
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
 
-    // Alocar memória no GPU
-    cudaMalloc((void **)&d_input, LARGURA * ALTURA * sizeof(double));
-    cudaMalloc((void **)&d_gradiente, LARGURA * ALTURA * sizeof(double));
-    cudaMalloc((void **)&d_direcao, LARGURA * ALTURA * sizeof(double));
-    cudaMalloc((void **)&d_output, LARGURA * ALTURA * sizeof(double));
+    cudaEventRecord(start);
+    executarCannyGPU(dim);
+    cudaEventRecord(stop);
 
-    // Copiar dados para o GPU
-    cudaMemcpy(d_input, h_input, LARGURA * ALTURA * sizeof(double), cudaMemcpyHostToDevice);
+    cudaEventSynchronize(stop);
 
-    // Configuração de threads e blocos
-    dim3 threadsPorBloco(16, 16);
-    dim3 blocosPorGrade((LARGURA + threadsPorBloco.x - 1) / threadsPorBloco.x, 
-                        (ALTURA + threadsPorBloco.y - 1) / threadsPorBloco.y);
+    float elapsed_time;
+    cudaEventElapsedTime(&elapsed_time, start, stop);
+    printf("Tempo de execução (GPU): %.6f segundos\n", elapsed_time / 1000);
 
-    // Executar os kernels
-    calcular_gradientes<<<blocosPorGrade, threadsPorBloco>>>(d_input, d_gradiente, d_direcao, LARGURA, ALTURA);
-    supressao_nao_maxima<<<blocosPorGrade, threadsPorBloco>>>(d_gradiente, d_direcao, d_output, LARGURA, ALTURA);
-    aplicar_thresholds<<<blocosPorGrade, threadsPorBloco>>>(d_output, d_output, 100, 200, LARGURA, ALTURA);
-
-    // Copiar resultado de volta para a CPU
-    cudaMemcpy(h_output, d_output, LARGURA * ALTURA * sizeof(double), cudaMemcpyDeviceToHost);
-
-    // Imprimir a matriz resultante
-    printf("Matriz de Entrada:\n");
-    imprimir_matriz(h_input, LARGURA, ALTURA);
-
-    printf("\nMatriz Final com Thresholds Aplicados:\n");
-    imprimir_matriz(h_output, LARGURA, ALTURA);
-
-    // Liberar memória
-    cudaFree(d_input);
-    cudaFree(d_gradiente);
-    cudaFree(d_direcao);
-    cudaFree(d_output);
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
 
     return 0;
 }
