@@ -1,54 +1,68 @@
 #!/bin/bash
 
-# Ficheiro de saída para os resultados
+# Output file for benchmark results
 output_file="benchmark_results.txt"
-echo "Iniciando benchmark com medições de tempo..." > $output_file
-echo "Resultados de execução:" >> $output_file
+csv_file="benchmark_results.csv"
+echo "Starting benchmark with time measurements..." > $output_file
+echo "Matrix Size,Version,Execution Time (s),Speedup" > $csv_file
 
-# Dimensões das matrizes para teste
-dimensoes=(128 256 512 1024)
+# Function to calculate speedup
+calculate_speedup() {
+    seq_time=$1
+    parallel_time=$2
+    if (( $(echo "$parallel_time > 0" | bc -l) )); then
+        echo "scale=4; $seq_time / $parallel_time" | bc
+    else
+        echo "Infinity"
+    fi
+}
 
-# Loop para cada dimensão de matriz
-for dim in "${dimensoes[@]}"; do
-    echo "Executando para matriz de dimensão ${dim}x${dim}..." >> $output_file
+# Matrix sizes to benchmark
+matrix_sizes=(128 256 512 1024 2048 4096)
 
-    # Variável para armazenar tempo da versão sequencial
-    sequencial_time=0
+# Compile programs
+gcc canny_sequential.c -o canny_sequential -lm
+gcc canny_openmp.c -o canny_openmp -fopenmp -lm
+nvcc canny_gpu.cu -o canny_gpu -lm
 
-    # Compilar e executar a versão Sequencial
-    echo "Compilando e executando a versão Sequencial para ${dim}x${dim}..."
-    gcc canny_sequential.c -o canny_sequential -lm
+# Benchmark loop
+for size in "${matrix_sizes[@]}"; do
+    echo "Running for matrix size ${size}x${size}..."
+
+    # Sequential Version
+    echo "Compiling and running Sequential version for ${size}x${size}..."
     start=$(date +%s.%N)
-    ./canny_sequential $dim >> $output_file
+    ./canny_sequential $size >> $output_file
     end=$(date +%s.%N)
-    sequencial_time=$(echo "$end - $start" | bc)
-    echo "Tempo de execução (Sequencial): $sequencial_time segundos" >> $output_file
+    seq_time=$(echo "$end - $start" | bc)
+    echo "Execution Time (Sequential): $seq_time seconds" >> $output_file
 
-    # Compilar e executar a versão OpenMP
-    echo "Compilando e executando a versão OpenMP para ${dim}x${dim}..."
-    gcc canny_openmp.c -o canny_openmp -fopenmp -lm
+    # OpenMP Version
+    echo "Compiling and running OpenMP version for ${size}x${size}..."
     start=$(date +%s.%N)
-    ./canny_openmp $dim >> $output_file
+    ./canny_openmp $size >> $output_file
     end=$(date +%s.%N)
     openmp_time=$(echo "$end - $start" | bc)
-    openmp_speedup=$(awk "BEGIN {printf \"%.6f\", $sequencial_time / $openmp_time}")
-    echo "Tempo de execução (OpenMP): $openmp_time segundos" >> $output_file
+    openmp_speedup=$(calculate_speedup $seq_time $openmp_time)
+    echo "Execution Time (OpenMP): $openmp_time seconds" >> $output_file
     echo "Speedup (OpenMP): $openmp_speedup" >> $output_file
 
-    # Compilar e executar a versão GPU
-    echo "Compilando e executando a versão GPU para ${dim}x${dim}..."
-    nvcc canny_gpu.cu -o canny_gpu -lm
+    # GPU Version
+    echo "Compiling and running GPU version for ${size}x${size}..."
     start=$(date +%s.%N)
-    ./canny_gpu $dim >> $output_file
+    ./canny_gpu $size >> $output_file
     end=$(date +%s.%N)
     gpu_time=$(echo "$end - $start" | bc)
-    gpu_speedup=$(awk "BEGIN {printf \"%.6f\", $sequencial_time / $gpu_time}")
-    echo "Tempo de execução (GPU): $gpu_time segundos" >> $output_file
+    gpu_speedup=$(calculate_speedup $seq_time $gpu_time)
+    echo "Execution Time (GPU): $gpu_time seconds" >> $output_file
     echo "Speedup (GPU): $gpu_speedup" >> $output_file
 
-    echo "-----------------------------" >> $output_file
+    # Save results to CSV
+    echo "$size,Sequential,$seq_time," >> $csv_file
+    echo "$size,OpenMP,$openmp_time,$openmp_speedup" >> $csv_file
+    echo "$size,GPU,$gpu_time,$gpu_speedup" >> $csv_file
+
+    echo "---------------------------------------------"
 done
 
-# Exibir resultados
-echo "Benchmark concluído. Resultados salvos em $output_file."
-cat $output_file
+echo "Benchmark completed. Results saved to $output_file and $csv_file."
