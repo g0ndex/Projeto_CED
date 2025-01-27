@@ -1,49 +1,96 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
 #include <time.h>
 
-void executarCanny(int dim) {
-    double **matriz = (double **)malloc(dim * sizeof(double *));
-    for (int i = 0; i < dim; i++) {
-        matriz[i] = (double *)malloc(dim * sizeof(double));
-        for (int j = 0; j < dim; j++) {
-            matriz[i][j] = (double)(i + j);
-        }
-    }
+#define PI 3.14159265358979323846
 
-    printf("Executando Canny Sequencial com matriz de dimensão %dx%d...\n", dim, dim);
-
-    // Simulação de cálculo (alteração dos valores da matriz)
-    for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim; j++) {
-            matriz[i][j] += 1.0;
-        }
-    }
-
-    for (int i = 0; i < dim; i++) {
-        free(matriz[i]);
-    }
-    free(matriz);
-}
+// Function prototypes
+void calculate_gradients(double **input, double **gradient, double **direction, int width, int height);
+bool compare_matrices(double **matrix1, double **matrix2, int width, int height);
+double **allocate_matrix(int width, int height);
+void free_matrix(double **matrix, int height);
+void print_matrix(double **matrix, int width, int height);
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf("Uso: %s <dimensao_da_matriz>\n", argv[0]);
+        printf("Usage: %s <matrix_size>\n", argv[0]);
         return 1;
     }
 
-    int dim = atoi(argv[1]);
-    if (dim <= 0) {
-        printf("Dimensão inválida. Deve ser um número inteiro positivo.\n");
-        return 1;
+    int size = atoi(argv[1]);
+    double **input = allocate_matrix(size, size);
+    double **gradient = allocate_matrix(size, size);
+    double **direction = allocate_matrix(size, size);
+
+    // Initialize input matrix
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            input[i][j] = (i + j) % 256;
+        }
     }
+
+    printf("Executing Canny Sequential with matrix size %dx%d...\n", size, size);
 
     clock_t start = clock();
-    executarCanny(dim);
+    calculate_gradients(input, gradient, direction, size, size);
     clock_t end = clock();
 
-    double elapsed_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Tempo de execução (Sequencial): %.6f segundos\n", elapsed_time);
+    double elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Execution Time (Sequential): %.6f seconds\n", elapsed_time);
+
+    free_matrix(input, size);
+    free_matrix(gradient, size);
+    free_matrix(direction, size);
 
     return 0;
+}
+
+void calculate_gradients(double **input, double **gradient, double **direction, int width, int height) {
+    for (int i = 1; i < height - 1; i++) {
+        for (int j = 1; j < width - 1; j++) {
+            double gx = input[i - 1][j + 1] + 2 * input[i][j + 1] + input[i + 1][j + 1]
+                      - input[i - 1][j - 1] - 2 * input[i][j - 1] - input[i + 1][j - 1];
+            double gy = input[i - 1][j - 1] + 2 * input[i - 1][j] + input[i - 1][j + 1]
+                      - input[i + 1][j - 1] - 2 * input[i + 1][j] - input[i + 1][j + 1];
+            gradient[i][j] = sqrt(gx * gx + gy * gy);
+            direction[i][j] = atan2(gy, gx) * 180 / PI;
+        }
+    }
+}
+
+bool compare_matrices(double **matrix1, double **matrix2, int width, int height) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (fabs(matrix1[i][j] - matrix2[i][j]) > 1e-6) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+double **allocate_matrix(int width, int height) {
+    double **matrix = (double **)malloc(height * sizeof(double *));
+    for (int i = 0; i < height; i++) {
+        matrix[i] = (double *)malloc(width * sizeof(double));
+    }
+    return matrix;
+}
+
+void free_matrix(double **matrix, int height) {
+    for (int i = 0; i < height; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+}
+
+void print_matrix(double **matrix, int width, int height) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            printf("%.2f ", matrix[i][j]);
+        }
+        printf("\n");
+    }
 }

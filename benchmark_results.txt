@@ -1,42 +1,67 @@
-Iniciando benchmark com medições de tempo...
-Resultados de execução:
-Executando para matriz de dimensão 128x128...
-Executando Canny Sequencial com matriz de dimensão 128x128...
-Tempo de execução (Sequencial): .002724592 segundos
-Executando Canny OpenMP com matriz de dimensão 128x128...
-Tempo de execução (OpenMP): .022632647 segundos
-Speedup (OpenMP): 0.120383
-Executando Canny GPU com matriz de dimensão 128x128...
-Tempo de execução (GPU): .441605906 segundos
-Speedup (GPU): 0.006170
------------------------------
-Executando para matriz de dimensão 256x256...
-Executando Canny Sequencial com matriz de dimensão 256x256...
-Tempo de execução (Sequencial): .002366366 segundos
-Executando Canny OpenMP com matriz de dimensão 256x256...
-Tempo de execução (OpenMP): .024747303 segundos
-Speedup (OpenMP): 0.095621
-Executando Canny GPU com matriz de dimensão 256x256...
-Tempo de execução (GPU): .426592335 segundos
-Speedup (GPU): 0.005547
------------------------------
-Executando para matriz de dimensão 512x512...
-Executando Canny Sequencial com matriz de dimensão 512x512...
-Tempo de execução (Sequencial): .003484027 segundos
-Executando Canny OpenMP com matriz de dimensão 512x512...
-Tempo de execução (OpenMP): .031984257 segundos
-Speedup (OpenMP): 0.108929
-Executando Canny GPU com matriz de dimensão 512x512...
-Tempo de execução (GPU): .417890423 segundos
-Speedup (GPU): 0.008337
------------------------------
-Executando para matriz de dimensão 1024x1024...
-Executando Canny Sequencial com matriz de dimensão 1024x1024...
-Tempo de execução (Sequencial): .006970648 segundos
-Executando Canny OpenMP com matriz de dimensão 1024x1024...
-Tempo de execução (OpenMP): .028279139 segundos
-Speedup (OpenMP): 0.246494
-Executando Canny GPU com matriz de dimensão 1024x1024...
-Tempo de execução (GPU): .411310864 segundos
-Speedup (GPU): 0.016947
------------------------------
+Starting benchmark with time measurements...
+Executing Canny Sequential with matrix size 128x128...
+Execution Time (Sequential): 0.001378 seconds
+Execution Time (Sequential): .005010327 seconds
+Executing Canny OpenMP with matrix size 128x128...
+Execution Time (OpenMP): 0.000456 seconds
+Execution Time (OpenMP): .003746557 seconds
+Speedup (OpenMP): 1.3373
+Execution completed on GPU for matrix size 128x128
+Total Execution Time (GPU): 0.000354 seconds
+Execution Time (GPU): .447087800 seconds
+Speedup (GPU): .0112
+Executing Canny Sequential with matrix size 256x256...
+Execution Time (Sequential): 0.003164 seconds
+Execution Time (Sequential): .007313921 seconds
+Executing Canny OpenMP with matrix size 256x256...
+Execution Time (OpenMP): 0.001495 seconds
+Execution Time (OpenMP): .005364236 seconds
+Speedup (OpenMP): 1.3634
+Execution completed on GPU for matrix size 256x256
+Total Execution Time (GPU): 0.000734 seconds
+Execution Time (GPU): .404903362 seconds
+Speedup (GPU): .0180
+Executing Canny Sequential with matrix size 512x512...
+Execution Time (Sequential): 0.009143 seconds
+Execution Time (Sequential): .016659310 seconds
+Executing Canny OpenMP with matrix size 512x512...
+Execution Time (OpenMP): 0.002826 seconds
+Execution Time (OpenMP): .008616974 seconds
+Speedup (OpenMP): 1.9333
+Execution completed on GPU for matrix size 512x512
+Total Execution Time (GPU): 0.002548 seconds
+Execution Time (GPU): .413759592 seconds
+Speedup (GPU): .0402
+Executing Canny Sequential with matrix size 1024x1024...
+Execution Time (Sequential): 0.040398 seconds
+Execution Time (Sequential): .053129900 seconds
+Executing Canny OpenMP with matrix size 1024x1024...
+Execution Time (OpenMP): 0.011067 seconds
+Execution Time (OpenMP): .024338099 seconds
+Speedup (OpenMP): 2.1829
+Execution completed on GPU for matrix size 1024x1024
+Total Execution Time (GPU): 0.006537 seconds
+Execution Time (GPU): .417387267 seconds
+Speedup (GPU): .1272
+Executing Canny Sequential with matrix size 2048x2048...
+Execution Time (Sequential): 0.162124 seconds
+Execution Time (Sequential): .194875232 seconds
+Executing Canny OpenMP with matrix size 2048x2048...
+Execution Time (OpenMP): 0.041912 seconds
+Execution Time (OpenMP): .076954495 seconds
+Speedup (OpenMP): 2.5323
+Execution completed on GPU for matrix size 2048x2048
+Total Execution Time (GPU): 0.027811 seconds
+Execution Time (GPU): .457388745 seconds
+Speedup (GPU): .4260
+Executing Canny Sequential with matrix size 4096x4096...
+Execution Time (Sequential): 0.635626 seconds
+Execution Time (Sequential): .741139461 seconds
+Executing Canny OpenMP with matrix size 4096x4096...
+Execution Time (OpenMP): 0.168340 seconds
+Execution Time (OpenMP): .274445762 seconds
+Speedup (OpenMP): 2.7004
+Execution completed on GPU for matrix size 4096x4096
+Total Execution Time (GPU): 0.096802 seconds
+Execution Time (GPU): .601115541 seconds
+Speedup (GPU): 1.2329
