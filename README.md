@@ -9,11 +9,25 @@ This repository contains implementations of the **Canny Edge Detection Algorithm
 Below is the detailed breakdown of each branch and its content:
 
 ### 1. **Main Branch**
-- **Description**: The starting point of the repository, containing the simplest sequential implementation of the Canny Edge Detection algorithm.
+- **Description**: The **Main Branch** consolidates all final versions of the project, including the Sequential, OpenMP, and GPU implementations, alongside all required scripts and outputs. It serves as the primary entry point for users to access the complete project in its final state.
 - **Content**:
-  - Sequential implementation code (`canny_sequential.c`).
-  - Basic `CMakeLists.txt` file for compilation.
-- **Purpose**: Serves as a baseline for performance comparison against parallel and GPU-optimized versions.
+  - **Source Codes**:
+    - `canny_sequential.c` – Final sequential implementation with robust debugging and gradient computation.
+    - `canny_openmp.c` – Final parallelized implementation using OpenMP for multi-core CPU optimization.
+    - `canny_gpu.cu` – Final CUDA implementation optimized for NVIDIA GPUs.
+  - **Scripts**:
+    - `run_benchmark.sh` – Automates benchmarking across all implementations.
+    - `generate_csv.sh` – Generates CSV files with benchmarking results.
+  - **Outputs**:
+    - `benchmark_results.csv` – Detailed results of execution times and speedup for multiple implementations.
+    - `benchmark_results.txt` – A human-readable benchmarking summary.
+  - **Build System**:
+    - `CMakeLists.txt` – Unified build script for compiling all implementations using CMake.
+    - `build` folder – Contains compiled binaries and ready-to-run executables.
+  - **Documentation**:
+    - `README.md` – Overview of the repository and usage instructions.
+    - `LICENSE` – Licensing information.
+- **Purpose**: To provide a fully consolidated, polished version of the project. This branch simplifies access to all functionalities, serving as the central repository for the project's final deliverables and results.
 
 ### 2. **Versão-Sequencial**
 - **Description**: This branch expands on the sequential implementation with additional comments, fixes, and debugging information.
@@ -59,17 +73,7 @@ Below is the detailed breakdown of each branch and its content:
 
 ## 🛠️ How to Use This Repository
 
-Clone the repository:
+### Clone the repository
 ```bash
 git clone https://github.com/g0ndex/Projeto_CED.git
 cd Projeto_CED
-
-
-### Key Improvements:
-1. **Consistent structure**: Used headings and subheadings for readability.
-2. **Clear branch descriptions**: Highlighted each branch's purpose and content.
-3. **Added system requirements**: Ensured the hardware details are clear.
-4. **Provided instructions**: Explained how to clone, build, and test.
-5. **Polished formatting**: Ensured the README is visually appealing.
-
-Let me know if this works!
