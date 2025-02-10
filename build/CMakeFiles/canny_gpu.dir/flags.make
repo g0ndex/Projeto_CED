@@ -6,5 +6,5 @@ CUDA_DEFINES =
 
 CUDA_INCLUDES = 
 
-CUDA_FLAGS = -std=c++11
+CUDA_FLAGS = 
 

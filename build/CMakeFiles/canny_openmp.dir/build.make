@@ -92,8 +92,6 @@ canny_openmp_EXTERNAL_OBJECTS =
 
 canny_openmp: CMakeFiles/canny_openmp.dir/canny_openmp.c.o
 canny_openmp: CMakeFiles/canny_openmp.dir/build.make
-canny_openmp: /usr/lib/gcc/x86_64-linux-gnu/12/libgomp.so
-canny_openmp: /usr/lib/x86_64-linux-gnu/libpthread.a
 canny_openmp: CMakeFiles/canny_openmp.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable canny_openmp"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/canny_openmp.dir/link.txt --verbose=$(VERBOSE)

@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = 
 
-C_FLAGS =  -fopenmp -std=gnu99
+C_FLAGS = 
 

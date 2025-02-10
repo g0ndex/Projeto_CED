@@ -117,19 +117,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named canny_sequential
-
-# Build rule for target.
-canny_sequential: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 canny_sequential
-.PHONY : canny_sequential
-
-# fast build rule for target.
-canny_sequential/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/build
-.PHONY : canny_sequential/fast
-
-#=============================================================================
 # Target rules for targets named canny_openmp
 
 # Build rule for target.
@@ -141,6 +128,19 @@ canny_openmp: cmake_check_build_system
 canny_openmp/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_openmp.dir/build.make CMakeFiles/canny_openmp.dir/build
 .PHONY : canny_openmp/fast
+
+#=============================================================================
+# Target rules for targets named canny_sequential
+
+# Build rule for target.
+canny_sequential: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 canny_sequential
+.PHONY : canny_sequential
+
+# fast build rule for target.
+canny_sequential/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/build
+.PHONY : canny_sequential/fast
 
 #=============================================================================
 # Target rules for targets named canny_gpu

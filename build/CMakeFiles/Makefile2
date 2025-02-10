@@ -63,8 +63,8 @@ CMAKE_BINARY_DIR = /home/alunos/tei/2024/tei27386/ProjetoCED/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/canny_sequential.dir/all
 all: CMakeFiles/canny_openmp.dir/all
+all: CMakeFiles/canny_sequential.dir/all
 all: CMakeFiles/canny_gpu.dir/all
 .PHONY : all
 
@@ -73,36 +73,10 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/canny_sequential.dir/clean
 clean: CMakeFiles/canny_openmp.dir/clean
+clean: CMakeFiles/canny_sequential.dir/clean
 clean: CMakeFiles/canny_gpu.dir/clean
 .PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/canny_sequential.dir
-
-# All Build rule for target.
-CMakeFiles/canny_sequential.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles --progress-num=5,6 "Built target canny_sequential"
-.PHONY : CMakeFiles/canny_sequential.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/canny_sequential.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/canny_sequential.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles 0
-.PHONY : CMakeFiles/canny_sequential.dir/rule
-
-# Convenience name for target.
-canny_sequential: CMakeFiles/canny_sequential.dir/rule
-.PHONY : canny_sequential
-
-# clean rule for target.
-CMakeFiles/canny_sequential.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/clean
-.PHONY : CMakeFiles/canny_sequential.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/canny_openmp.dir
@@ -129,6 +103,32 @@ canny_openmp: CMakeFiles/canny_openmp.dir/rule
 CMakeFiles/canny_openmp.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_openmp.dir/build.make CMakeFiles/canny_openmp.dir/clean
 .PHONY : CMakeFiles/canny_openmp.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/canny_sequential.dir
+
+# All Build rule for target.
+CMakeFiles/canny_sequential.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles --progress-num=5,6 "Built target canny_sequential"
+.PHONY : CMakeFiles/canny_sequential.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/canny_sequential.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/canny_sequential.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles 0
+.PHONY : CMakeFiles/canny_sequential.dir/rule
+
+# Convenience name for target.
+canny_sequential: CMakeFiles/canny_sequential.dir/rule
+.PHONY : canny_sequential
+
+# clean rule for target.
+CMakeFiles/canny_sequential.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/canny_sequential.dir/build.make CMakeFiles/canny_sequential.dir/clean
+.PHONY : CMakeFiles/canny_sequential.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/canny_gpu.dir
