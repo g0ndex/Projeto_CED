@@ -30,44 +30,45 @@ Below is the detailed breakdown of each branch and its content:
 - **Purpose**: To provide a fully consolidated, polished version of the project. This branch simplifies access to all functionalities, serving as the central repository for the project's final deliverables and results.
 
 ### 2. **Versão-Sequencial**
-- **Description**: This branch expands on the sequential implementation with additional comments, fixes, and debugging information.
+- **Description**: The base implementation of the Canny Edge Detection algorithm using a sequential approach.
 - **Content**:
-  - Enhanced sequential implementation (`canny_sequential.c`).
-  - Detailed comments explaining gradient computation and suppression.
-- **Purpose**: A polished version of the sequential algorithm to establish a foundation for further optimization.
+  - `canny_sequential.c` – Sequential implementation with gradient computation and non-maximum suppression.
+- **Purpose**: Serves as the baseline for performance comparisons with parallel and GPU versions.
 
-### 3. **Versão-OpenMP**
-- **Description**: Introduces parallelization of the Canny Edge Detection algorithm using OpenMP.
+### 3. **Versão-Supressão-Não-Máxima**
+- **Description**: Focuses on implementing non-maximum suppression as a crucial part of the edge detection process.
 - **Content**:
-  - Parallelized implementation (`canny_openmp.c`) leveraging multi-core CPUs.
-  - Benchmarking integration to measure speedup and efficiency.
+  - Updated `canny_sequential.c` with non-maximum suppression logic.
+- **Purpose**: To refine the edge detection algorithm's accuracy and compare its impact on performance.
+
+### 4. **Versão-Threshold**
+- **Description**: Introduces thresholding for edge linking as part of the Canny algorithm.
+- **Content**:
+  - `canny_sequential.c` – Enhanced with thresholding to produce binary edge maps.
+- **Purpose**: To study the effect of thresholding parameters on edge detection results.
+
+### 5. **Versão-OpenMP**
+- **Description**: Implements parallelization of the Canny Edge Detection algorithm using OpenMP.
+- **Content**:
+  - `canny_openmp.c` – Parallelized implementation leveraging multi-core CPU optimizations.
 - **Key Optimizations**:
-  - Divided workload across multiple threads using OpenMP `#pragma` directives.
-  - Efficient memory access to prevent thread contention.
-- **Purpose**: Demonstrates how parallelism can significantly improve performance for edge detection.
+  - Workload divided across threads using OpenMP `#pragma` directives.
+  - Efficient memory management to reduce contention.
+- **Purpose**: To explore the speedup achieved through CPU parallelization.
 
-### 4. **Versão-GPU**
-- **Description**: Implements the Canny Edge Detection algorithm using CUDA for GPU acceleration.
+### 6. **Versão-GPU**
+- **Description**: Accelerates the Canny Edge Detection algorithm using CUDA for GPU processing.
 - **Content**:
-  - CUDA-based implementation (`canny_gpu.cu`) for NVIDIA GPUs.
-  - Optimizations for global memory access and thread block distribution.
-  - Compatibility with CUDA 12.4 (tested on NVIDIA A100 GPUs).
-- **Purpose**: Showcases the computational power of GPUs for handling large-scale image processing tasks efficiently.
+  - `canny_gpu.cu` – CUDA implementation optimized for NVIDIA GPUs.
+  - Tested on NVIDIA A100-SXM4 GPUs with CUDA 12.4.
+- **Purpose**: Highlights the computational advantages of GPUs for large-scale image processing.
 
-### 5. **Versão-Medição-Tempos**
-- **Description**: Focuses on benchmarking the performance of the algorithm across different implementations (Sequential, OpenMP, and GPU).
+### 7. **Versão-Medição-Tempos**
+- **Description**: Focuses on benchmarking the performance of different implementations.
 - **Content**:
-  - Script (`run_benchmark.sh`) to automate benchmarking for multiple matrix sizes.
-  - CSV file (`benchmark_results.csv`) for recording execution times and speedup.
-  - OpenMP, CUDA, and sequential versions for testing.
-- **Purpose**: Provides a robust evaluation framework for analyzing the efficiency of each implementation.
-
-### 6. **Versão-Benchmarking-CMake**
-- **Description**: Contains a consolidated setup using CMake for building all implementations (Sequential, OpenMP, and GPU) with ease.
-- **Content**:
-  - Comprehensive `CMakeLists.txt` for cross-platform compatibility.
-  - Scripts to build and run benchmarks.
-- **Purpose**: Simplifies the compilation process and ensures a unified build system for all implementations.
+  - `run_benchmark.sh` – Automates the benchmarking process across multiple implementations and matrix sizes.
+  - `benchmark_results.csv` – Records execution times and speedups for all implementations.
+- **Purpose**: Provides a comprehensive evaluation of the performance trade-offs across various implementations.
 
 ---
 
