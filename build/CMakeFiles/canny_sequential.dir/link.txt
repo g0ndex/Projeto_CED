@@ -1,0 +1,1 @@
+/usr/bin/cc  -fopenmp CMakeFiles/canny_sequential.dir/canny_sequential.c.o -o canny_sequential  -lm 

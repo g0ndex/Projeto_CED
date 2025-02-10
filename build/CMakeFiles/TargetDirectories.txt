@@ -1,0 +1,5 @@
+/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles/canny_sequential.dir
+/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles/canny_openmp.dir
+/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles/canny_gpu.dir
+/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles/edit_cache.dir
+/home/alunos/tei/2024/tei27386/ProjetoCED/build/CMakeFiles/rebuild_cache.dir

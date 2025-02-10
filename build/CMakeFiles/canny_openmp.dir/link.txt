@@ -1,0 +1,1 @@
+/usr/bin/cc  -fopenmp CMakeFiles/canny_openmp.dir/canny_openmp.c.o -o canny_openmp  -lm /usr/lib/gcc/x86_64-linux-gnu/12/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 
